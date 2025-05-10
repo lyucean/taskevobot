@@ -1,9 +1,3 @@
-<?php
-// Получаем имя бота из переменных окружения
-require_once __DIR__ . '/helper.php';
-loadEnv(__DIR__ . '/.env');
-$botName = getenv('BOT_NAME') ?: 'TaskEvoBot';
-?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -12,7 +6,7 @@ $botName = getenv('BOT_NAME') ?: 'TaskEvoBot';
     <meta name="description" content="TaskEvoBot - AI-помощник нового поколения для управления задачами. Революционный подход к методологиям SMART, CLEAR и FAST.">
     <meta name="keywords" content="TaskEvoBot, AI помощник, SMART задачи, CLEAR методология, FAST методология, будущее управления задачами">
     <meta name="author" content="Lyucean">
-    <title><?php echo htmlspecialchars($botName); ?> - Будущее управления задачами</title>
+    <title>TaskEvoBot - Будущее управления задачами</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
@@ -136,6 +130,7 @@ $botName = getenv('BOT_NAME') ?: 'TaskEvoBot';
             margin-bottom: 20px;
             padding-left: 30px;
             position: relative;
+            list-style-type: none;  /* Убираем точки */
             transition: transform 0.3s ease;
         }
 
@@ -151,6 +146,10 @@ $botName = getenv('BOT_NAME') ?: 'TaskEvoBot';
             transform: translateY(-50%);
             color: var(--neon-blue);
             text-shadow: 0 0 5px var(--neon-blue);
+        }
+
+        .features-ui {
+            padding-inline-start: 0;
         }
 
         .telegram-button {
@@ -265,6 +264,11 @@ $botName = getenv('BOT_NAME') ?: 'TaskEvoBot';
             border-radius: 50%;
         }
 
+        .description {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
     </style>
 </head>
 <body>
@@ -275,14 +279,14 @@ $botName = getenv('BOT_NAME') ?: 'TaskEvoBot';
                 <img src="TaskEvoBot.png" alt="TaskEvoBot Logo" class="logo-circle-img">
             </div>
         </div>
-        <h1><?php echo htmlspecialchars($botName); ?></h1>
+        <h1>TaskEvoBot</h1>
         <div class="description">
             <p>Революционный AI-помощник в мире управления задачами</p>
         </div>
         
         <div class="features">
             <h2>Возможности нашего бота:</h2>
-            <ul>
+            <ul class="features-ui">
                 <li>Интеллектуальный выбор методологии (SMART, CLEAR, FAST) для каждой задачи</li>
                 <li>Трансформация хаотичных идей в чёткие инструкции</li>
                 <li>Кристально ясные формулировки для любого уровня подготовки</li>
@@ -290,7 +294,7 @@ $botName = getenv('BOT_NAME') ?: 'TaskEvoBot';
             </ul>
         </div>
 
-        <a href="https://t.me/<?php echo htmlspecialchars($botName); ?>" class="telegram-button">
+        <a href="https://t.me/TaskEvoBot" class="telegram-button">
             Запустить будущее
         </a>
 
