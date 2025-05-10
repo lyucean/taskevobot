@@ -12,6 +12,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: production  # использовать среду "production"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
