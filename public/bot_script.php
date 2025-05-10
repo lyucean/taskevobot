@@ -11,7 +11,7 @@ $botToken = getenv('BOT_TOKEN');
 $adminId = getenv('ADMIN_USER_ID');
 
 if (!$botToken || !$adminId) {
-    die("Ошибка: BOT_TOKEN или ADMIN_ID не найдены в файле .env");
+    die("Ошибка: BOT_TOKEN или ADMIN_USER_ID не найдены в файле .env");
 }
 
 // Получаем входящие данные
