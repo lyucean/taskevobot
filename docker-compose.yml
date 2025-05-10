@@ -1,0 +1,37 @@
+services:
+  taskevobot:
+    image: php:8.1-apache
+    container_name: taskevobot-bot
+    restart: unless-stopped
+    volumes:
+      - ./public:/var/www/html
+    environment:
+      - PHP_MEMORY_LIMIT=256M
+    networks:
+      - web
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.taskevobot.rule=Host(`taskevobot.lyucean.com`)
+      - traefik.http.routers.taskevobot.entrypoints=websecure
+      - traefik.http.routers.taskevobot.tls=true
+      - traefik.http.routers.taskevobot.tls.certresolver=letsencrypt
+      - traefik.http.services.taskevobot.loadbalancer.server.port=80
+
+  taskevobot-local:
+    image: php:8.1-apache
+    container_name: taskevobot-bot-local
+    restart: unless-stopped
+    volumes:
+      - ./public:/var/www/html
+    environment:
+      - PHP_MEMORY_LIMIT=256M
+    ports:
+      - "80:80"
+    networks:
+      - local
+
+networks:
+  web:
+    external: true
+  local:
+    driver: bridge

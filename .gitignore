@@ -1,0 +1,22 @@
+# Игнорируем файлы окружения
+.env
+
+# Игнорируем системные файлы macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Игнорируем файлы IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Игнорируем зависимости PHP
+/vendor/
+composer.lock
+
+# Игнорируем логи
+*.log

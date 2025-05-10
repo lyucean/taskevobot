@@ -1,0 +1,109 @@
+name: Deployment
+
+concurrency: production
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: "Заполнение переменных среды"
+        run: |
+          echo "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" >> .env
+          echo "BOT_NAME=${{ vars.BOT_NAME }}" >> .env
+          echo "ADMIN_USER_ID=${{ vars.ADMIN_USER_ID }}" >> .env
+
+      - name: "Создадим каталог проекта"
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: mkdir -p /home/user/taskevobot.lyucean.com
+
+      - name: "Скопируйте .env в папку проекта."
+        run: mv .env ./bot || ls ./bot
+
+      - name: "Скопируйте файлы приложения на удаленный сервер."
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          source: "./*"
+          target: "/var/www/taskevobot.lyucean.com"
+
+      - name: "Поправим права на файлы и владельца."
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /var/www/taskevobot.lyucean.com/bot/
+
+  publish:
+      runs-on: ubuntu-latest
+      needs: [deploy]
+      steps:
+        - name: "Создадим веб-сеть, запустите docker compose, поправим права на файлы ."
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            password: ${{ secrets.PASSWORD }}
+            port: ${{ secrets.PORT }}
+            script: |
+              cd /var/www/taskevobot.lyucean.com/
+              docker compose up -d
+              docker compose ps
+              # Переключим бота с Pulling на Webhook.
+              docker compose exec taskevobot php /var/www/html/init_webhook.php
+
+  test-web:
+      runs-on: ubuntu-latest
+      needs: [publish]
+      steps:
+        - name: "Проверка доступности сайта"
+          uses: wei/curl@v1
+          with:
+            args:  https://taskevobot.lyucean.com/
+
+  test-bot:
+      runs-on: ubuntu-latest
+      needs: [publish]
+      steps:
+        - name: "Проверка доступности бота"
+          uses: wei/curl@v1
+          with:
+            args:  https://taskevobot.lyucean.com/bot_script.php
+
+  alert:
+      name: Alert
+      needs: [publish]
+      runs-on: ubuntu-latest
+      steps:
+        - name: send telegram message on push
+          uses: appleboy/telegram-action@master
+          with:
+            to: ${{ secrets.ADMIN_USER_ID }}
+            token: ${{ secrets.BOT_TOKEN }}
+            message: |
+              ${{ github.actor }} created commit:
+              Commit message: ${{ github.event.commits[0].message }}
+  
+              Repository: ${{ github.repository }}
+  
+              See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
