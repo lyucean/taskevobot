@@ -238,6 +238,33 @@ $botName = getenv('BOT_NAME') ?: 'TaskEvoBot';
                 font-size: 2em;
             }
         }
+
+        .logo-circle {
+            position: relative;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2px;
+        }
+
+        .logo-circle-inner {
+            width: 95%;
+            height: 95%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo-circle-img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
     </style>
 </head>
 <body>
@@ -245,7 +272,7 @@ $botName = getenv('BOT_NAME') ?: 'TaskEvoBot';
     <div class="container">
         <div class="logo-circle">
             <div class="logo-circle-inner">
-                <img src="TaskEvoBot.png" alt="TaskEvoBot Logo">
+                <img src="TaskEvoBot.png" alt="TaskEvoBot Logo" class="logo-circle-img">
             </div>
         </div>
         <h1><?php echo htmlspecialchars($botName); ?></h1>
