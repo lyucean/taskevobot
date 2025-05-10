@@ -244,7 +244,9 @@ $botName = getenv('BOT_NAME') ?: 'TaskEvoBot';
     <div class="cyber-grid"></div>
     <div class="container">
         <div class="logo-circle">
-            <img src="TaskEvoBot.png" alt="TaskEvoBot Logo">
+            <div class="logo-circle-inner">
+                <img src="TaskEvoBot.png" alt="TaskEvoBot Logo">
+            </div>
         </div>
         <h1><?php echo htmlspecialchars($botName); ?></h1>
         <div class="description">
